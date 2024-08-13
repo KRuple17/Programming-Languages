@@ -1,0 +1,116 @@
+MOVW R4, 0 - Moves a Word of 0s to Register 4
+1110 0011 0000 0000 0100 0000 0000 0000
+E 		3 		0 		  0 		4 		0 		0 		 0
+00 40 00 E3
+
+
+MOVT R4, 0x3F20 - Moves the base gpio pin register address to Register4
+1110 0011 0100 0011 0100 1111 0010 0000
+
+E			3		4 		3		4 		F 		2 		0
+20 4F 43 E3
+
+ADD R2, (<<<stores result here)R4, 0x10 - Adds the value in Register4 with 0x10 and stores the result in Register2 (pin 47 output select register)
+1110 0010 1000 0100 0010 0000 0001 0000
+E 		2 		8  	  4  		2   	0  	1  	0
+10 20 84 E2
+
+
+LDR(Take the value that R2 points to in mem. Store it in R3) R3, R2 - Takes the value in mem Register2 points to and stores it in Register3 (<<)
+1110 0100 0001 0010  0011 0000 0000 0000
+E 		4 			1 		2 		3 		 0 		0   	0
+00 30 12 E4
+
+
+																																									OR R3, R3, 0x200000 - ORs the value in R3 with 0x20 00 00 Which turns on Bit 0x200000 in Register3 
+																																									1110 0011 1000 0011 0011 0110 0000 0010
+																																									E 		3 		4 			3 		3  	6 		0 			2
+
+
+MOVT R3 0x0020 0000 - creates the 47 pin output instruction
+//////////////////////////////////////////////////
+1110  0011 0100 0000 0011 0000 0010 0000
+E 		3 		 4 		0 		3  	0  		2     0
+20 30 40 E3
+////////////////////////////////////////////////
+
+
+STR R3(what your writing to the address), R2(address) - Stores the value in R3 to Ram   (>>) (makes 47 an output pin)
+1110 0100 0000  0010 0011 0000 0000 0000
+E 		4 		0  		2      3 		0 		  0 		0
+00 30 02 E4
+
+
+ADD R5, R4, 0x20 - Adds the value in Register4 with 0x20 and stores the result in Register5 (makes the address for turning on the pin)
+1110 0010 1000 0100 0101 0000 0010 0000
+
+E 		  2 		8  	4  	5  	0  	2  	0 
+20 50 84 E2
+
+ADD R7, R4, 0x2C - make address for turning off pin.
+1110 0010 1000 0100 0111 0000 0010 1100
+E 		2 			8 		4 		7 		0 			2 		C
+2C 70 84 E2
+
+
+MOVW R6, 0x8000 - Moves 0x8000 as a half word to bottom of Register6 (is the binary that represents the pin turning on)
+1110  0011 0000 1000 0110 0000 0000 0000
+E        3      0       8      6       0     0      0
+00 60 08 E3
+
+
+STR R6, R5 - Stores the value in Register6 to (address)Register5 - turn on
+1110 0100 0000 0101 0110 0000 0000 0000
+E 		4 		0 		 5 	  6		0 	     0 	 0
+00 60 05 E4
+
+
+MOVT R8, 0x8888
+1110 0011 0100 1000 1000 1000 1000 1000
+E 		3 			4 		8 		8 		8 		8 			8
+88 88 48 E3
+
+MOVW R8, 0x8888
+1110 0011 0000 1000 1000 1000 1000 1000
+E 		3 		0 			8 		8 		8 		8 		8
+88 88 08 E3
+
+
+SUB R8, R8,  0x1
+1110 0010 0101 1000 1000  0000 0000 0001
+E			2  	5 			8 		8			0 		0  	1
+01 80 58 E2
+
+Branch back 3 steps to subtraction while result != 0
+0001 1010 1111 1111 1111 1111 1111 1101
+1 			A 			F 		F 		F 	    F 		F 			D
+FD FF FF 1A
+
+
+
+STR R6, R7
+1110 0100 0000 0111 0110 0000 0000 0000 -turn off
+E 		4 		0 			7 		6		0 		0 			0
+00 60 07 E4
+
+
+
+MOVT R8, 0x8888
+1110 0011 0100 1000 1000 1000 1000 1000
+E 		3 			4 		8 		8 		8 		8 			8
+88 88 48 E3
+
+
+SUB R8, R8,  0x1
+1110 0010 0101 1000 1000  0000 0000 0001
+E			2  	5 			8 		8			0 		0  	1
+01 80 58 E2
+
+Branch back 3 steps to subtraction while result != 0
+0001 1010 1111 1111 1111 1111 1111 1101
+1 			A 			F 		F 		F 	    F 		F 			D
+FD FF FF 1A
+
+
+FA FF FF EA- Loop back to turn light on.
+FC FF FF EA - loop back 

@@ -1,0 +1,14 @@
+# solid light code
+
+# move value into upper bits
+
+subtract 1 and set update bit
+branch when not equal
+
+add c to turn on address and write to turn off
+
+move value into upper bits
+subtract 1 
+branch when not equal
+
+branch to turn on 
